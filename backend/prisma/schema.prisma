@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  id               Int     @id @default(autoincrement())
+  title            String  @db.VarChar(256)
+  subtitle         String? @db.VarChar(500)
+  description      String  @db.Text()
+  price            Float
+  currency         String
+  specifications   String  @db.Text()
+  type             String  @db.VarChar(128)
+  profileImage     String  @db.VarChar(1024)
+  source           Source
+  url              String
+}
+
+enum Source {
+  rozetka
+  telemart
+}

@@ -1,0 +1,50 @@
+version: '3'
+services:
+    frontend:
+        build:
+            context: frontend
+        container_name: frontend
+        restart: always
+        ports:
+            - '3000:3000'
+        environment:
+            NODE_ENV: production
+        depends_on:
+            - backend
+        networks:
+            - bridge
+
+    backend:
+        build:
+            context: backend
+        container_name: backend
+        restart: always
+        ports:
+            - "3001:3001"
+        environment:
+            NODE_ENV: production
+        depends_on:
+            - postgres
+        networks:
+            - bridge
+
+    postgres:
+        image: 'postgres:latest'
+        container_name: postgres
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            POSTGRES_USER: '${POSTGRES_USER}'
+            POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+            POSTGRES_DB: '${POSTGRES_DB}'
+        volumes:
+            - 'postgres_data:/var/lib/postgresql/data'
+        networks:
+            - bridge
+
+networks:
+    bridge:
+        driver: bridge
+
+volumes:
+    postgres_data:
